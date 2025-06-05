@@ -1,0 +1,37 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <ul id="produtos"></ul>
+    <h3 id="filtro"></h3>
+
+    <script>
+         let produtos = ['Notebook Acer 15', 'Celular Motorola Infinix'];
+         let linha = '';
+         
+         //Adicionar Produto 
+         produtos.push('Relogio Digital Smart');
+         produtos.unshift('Projetor Smart HBD30');
+         produtos.push('Monitor LG Concarvo de 29');
+         produtos.push('Realme C53');  // Corrigido aqui
+         
+         produtos.sort();
+
+         // Montar lista completa
+         produtos.forEach(p => linha += `<li>${p}</li>`);
+
+         // Mostrar lista no HTML
+         document.getElementById('produtos').innerHTML = linha;
+
+         // Criar filtro para produtos que começam com "Mo" 
+         let filtro = produtos.filter(p => p.startsWith('Mo'));
+
+         // Mostrar filtro dentro do elemento <h3>
+         document.getElementById('filtro').innerText = 'Filtro: ' + filtro.join(', ');
+    </script>
+</body>
+</html>
