@@ -1,67 +1,76 @@
-let descricaoProduto = document.getElementById('descricao')
-let precoProduto = document.getElementById('preco')
+let descricaoCategoria = document.getElementById('descricao')
 let btnSalvar = document.getElementById('btnSalvar')
 
-let linha = ''
-let produtos = []
+let categorias = []
 let indexEditado = null
 
 function renderizarTabela() {
-    linha = ''
-
-    produtos.forEach((p, index) => linha += `
-        <tr>
-            <td>${p.codigo}</td>
-            <td>${p.descricao}</td>
-            <td>R$ ${p.preco.toFixed(2)}</td>
-            <td>
-                <button onclick="editarProduto(${index})" class="btn btn-md bg-warning">Editar</button>
-                <button onclick="removerProduto(${index})" class="btn btn-md bg-danger text-light">Remover</button>
-            </td>
-        </tr>
-    `)
-
-    document.getElementById('produtos').innerHTML = linha
+  let linha = ''
+  categorias.forEach((c, index) => {
+    linha += `
+      <tr>
+        <td>${c.codigo}</td>
+        <td>${c.descricao}</td>
+        <td>
+          <button onclick="editarCategoria(${index})" class="btn btn-md bg-warning">Editar</button>
+          <button onclick="removerCategoria(${index})" class="btn btn-md bg-danger text-light">Remover</button>
+        </td>
+      </tr>
+    `
+  })
+  document.getElementById('categorias').innerHTML = linha
 }
 
-function addProduto() {
-    produtos.push({
-        codigo: produtos.length + 1,
-        descricao: descricaoProduto.value,
-        preco: Number(precoProduto.value)
-    })
-
-    renderizarTabela()
-
-    descricaoProduto.value = ''
-    precoProduto.value = ''
-    descricaoProduto.focus()
+function validarCampos() {
+  if (descricaoCategoria.value.trim() === '') {
+    alert('A descrição da categoria não pode ficar vazia.')
+    descricaoCategoria.focus()
+    return false
+  }
+  return true
 }
 
-function editarProduto(index) {
-    const produto = produtos[index]
-    descricaoProduto.value = produto.descricao
-    precoProduto.value = produto.preco
-    indexEditado = index
-    btnSalvar.innerText = 'Editar Produto'
-    btnSalvar.onclick = atualizarProduto
+function addCategoria() {
+  if (!validarCampos()) return
+  categorias.push({
+    codigo: categorias.length + 1,
+    descricao: descricaoCategoria.value
+  })
+  limparCampos()
+  renderizarTabela()
 }
 
-function atualizarProduto() {
-    produtos[indexEditado].descricao = descricaoProduto.value
-    produtos[indexEditado].preco = Number(precoProduto.value)
-
-    renderizarTabela()
-    
-    descricaoProduto.value = ''
-    precoProduto.value = ''
-    descricaoProduto.focus()
-    btnSalvar.innerText = 'Adicionar Produto'
-    btnSalvar.onclick = addProduto
+function editarCategoria(index) {
+  const categoria = categorias[index]
+  descricaoCategoria.value = categoria.descricao
+  indexEditado = index
+  btnSalvar.innerText = 'Editar Categoria'
+  btnSalvar.onclick = atualizarCategoria
 }
 
-function removerProduto(index) {
-    const produto = produtos[index]
-    produtos.splice(index, 1)
-    renderizarTabela()
+function atualizarCategoria() {
+  if (!validarCampos()) return
+  categorias[indexEditado].descricao = descricaoCategoria.value
+  indexEditado = null
+  btnSalvar.innerText = 'Adicionar Categoria'
+  btnSalvar.onclick = addCategoria
+  limparCampos()
+  renderizarTabela()
 }
+
+function removerCategoria(index) {
+  categorias.splice(index, 1)
+  categorias.forEach((c, i) => c.codigo = i + 1)
+  renderizarTabela()
+}
+
+function limparCampos() {
+  descricaoCategoria.value = ''
+  descricaoCategoria.focus()
+}
+
+// Inicializa botão para adicionar
+btnSalvar.onclick = addCategoria
+
+// Inicializa tabela vazia
+renderizarTabela()
